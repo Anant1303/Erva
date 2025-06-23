@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday, Erva! ❤️</title>
+    <!-- Tailwind CSS CDN for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+      /* Custom styles for the modal overlay and content */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+      }
+      .modal-content {
+        position: relative;
+        max-width: 90%;
+        max-height: 90%;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 1rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .modal-content img {
+        max-width: 100%;
+        max-height: 80vh; /* Limit image height to prevent overflow */
+        border-radius: 0.75rem;
+      }
+      .modal-close-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: none;
+        border: none;
+        font-size: 2rem;
+        color: #fff;
+        cursor: pointer;
+        padding: 0;
+        line-height: 1;
+        text-shadow: 0 0 5px rgba(0,0,0,0.5);
+        z-index: 1001; /* Ensure button is above overlay and content */
+      }
+      /* Dark mode for modal button for better contrast */
+      .modal-content .modal-close-button {
+          color: #333; /* Darker color when inside the white modal content */
+          text-shadow: none;
+      }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <!-- Load React and ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- Load Babel for JSX transformation in the browser -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+        // Your React App content is embedded directly here.
+        // This script tag with type="text/babel" tells the browser to use Babel
+        // to transform the JSX code before React can render it.
+
+        // Main App Component
+        function App() {
+          // birthdayTargetDate and countdown logic commented out for immediate viewing
+          // const birthdayTargetDate = new Date('2025-06-24T00:00:00+03:00').getTime();
+          const [timeLeft, setTimeLeft] = React.useState(0); // Using React.useState
+          const [isBirthday, setIsBirthday] = React.useState(true); // Set to true to bypass countdown
+          const [currentPage, setCurrentPage] = React.useState('home'); // State to manage current page
+          const [modalImage, setModalImage] = React.useState(null); // State for modal image
+
+          // Function to open the modal with a specific image
+          const openModal = (imageSrc, imageAlt) => {
+            setModalImage({ src: imageSrc, alt: imageAlt });
+          };
+
+          // Function to close the modal
+          const closeModal = () => {
+            setModalImage(null);
+          };
+
+          React.useEffect(() => { // Using React.useEffect
+            // The original countdown logic is commented out to ensure the website is always visible.
+            // If you wish to re-enable the countdown later, uncomment the 'birthdayTargetDate'
+            // and the entire 'calculateTimeLeft' function and its related 'useEffect' logic.
+            /*
+            const calculateTimeLeft = () => {
+              const now = new Date().getTime();
+              const difference = birthdayTargetDate - now;
+
+              if (difference <= 0) {
+                setIsBirthday(true);
+                setTimeLeft(0);
+                return {};
+              }
+
+              const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+              const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+              const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+              const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+              return { days, hours, minutes, seconds };
+            };
+
+            const initialTime = calculateTimeLeft();
+            if (Object.keys(initialTime).length === 0) {
+              setIsBirthday(true);
+            } else {
+              setTimeLeft(initialTime);
+            }
+
+            const timer = setInterval(() => {
+              const updatedTime = calculateTimeLeft();
+              if (Object.keys(updatedTime).length === 0) {
+                setIsBirthday(true);
+                clearInterval(timer);
+              } else {
+                setTimeLeft(updatedTime);
+              }
+            }, 1000);
+
+            return () => clearInterval(timer);
+            */
+          }, []); // Empty dependency array as no dynamic values from external scope are needed for this bypassed state
+
+          // Conditional rendering based on countdown
+          if (!isBirthday) {
+            return (
+              <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-400 via-pink-500 to-red-500 text-white font-inter p-4">
+                <div className="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg rounded-3xl shadow-xl p-8 md:p-12 text-center border border-white border-opacity-30">
+                  <h1 className="text-4xl md:text-6xl font-extrabold mb-6 animate-pulse">
+                    Her Special Day Is Coming!
+                  </h1>
+                  <p className="text-lg md:text-xl mb-8">
+                    Get ready for a beautiful surprise...
+                  </p>
+                  <div className="flex justify-center space-x-4 md:space-x-8 text-2xl md:text-5xl font-bold">
+                    <CountdownSegment value={timeLeft.days || 0} label="Days" />
+                    <CountdownSegment value={timeLeft.hours || 0} label="Hours" />
+                    <CountdownSegment value={timeLeft.minutes || 0} label="Minutes" />
+                    <CountdownSegment value={timeLeft.seconds || 0} label="Seconds" />
+                  </div>
+                  <p className="text-md md:text-lg mt-8 opacity-80">
+                    (The website will magically appear when the countdown hits zero!)
+                  </p>
+                </div>
+              </div>
+            );
+          }
+
+          // --- Main Website Content (displayed after countdown) ---
+          return (
+            <div className="min-h-screen bg-gradient-to-br from-pink-200 via-purple-300 to-blue-200 font-inter text-gray-800">
+              {/* Navigation */}
+              <nav className="bg-white bg-opacity-80 backdrop-filter backdrop-blur-sm shadow-lg p-4 md:p-6 sticky top-0 z-50 rounded-b-3xl">
+                <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
+                  <div className="text-2xl md:text-3xl font-bold text-purple-700 mb-4 md:mb-0">
+                    Happy Birthday, Erva! 🎉
+                  </div>
+                  <div className="flex flex-wrap justify-center gap-3 md:gap-6">
+                    <NavLink title="Home" currentPage={currentPage} targetPage="home" onClick={() => setCurrentPage('home')} />
+                    <NavLink title="My Message" currentPage={currentPage} targetPage="message" onClick={() => setCurrentPage('message')} />
+                    {/* Pass openModal to GalleryPage */}
+                    <NavLink title="Gallery" currentPage={currentPage} targetPage="gallery" onClick={() => setCurrentPage('gallery')} />
+                    <NavLink title="Friend's Wishes" currentPage={currentPage} targetPage="wishes" onClick={() => setCurrentPage('wishes')} />
+                  </div>
+                </div>
+              </nav>
+
+              {/* Page Content */}
+              <div className="container mx-auto py-8 px-4">
+                {currentPage === 'home' && <HomePage />}
+                {currentPage === 'message' && <MessagePage />}
+                {currentPage === 'gallery' && <GalleryPage openModal={openModal} />} {/* Pass openModal here */}
+                {currentPage === 'wishes' && <WishesPage />}
+              </div>
+
+              {/* Footer */}
+              <footer className="bg-purple-700 text-white text-center p-6 mt-8 rounded-t-3xl">
+                <p>&copy; {new Date().getFullYear()} Created with love for Erva ❤️</p>
+              </footer>
+
+              {/* Image Modal */}
+              {modalImage && (
+                <div className="modal-overlay" onClick={closeModal}>
+                  <button className="modal-close-button" onClick={closeModal}>&times;</button>
+                  <div className="modal-content" onClick={(e) => e.stopPropagation()}> {/* Prevent closing when clicking inside content */}
+                    <img src={modalImage.src} alt={modalImage.alt} />
+                    {modalImage.alt && (
+                      <p className="text-gray-700 mt-4 text-center text-lg font-semibold">{modalImage.alt}</p>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        }
+
+        // Reusable Countdown Segment Component
+        const CountdownSegment = ({ value, label }) => (
+          <div className="flex flex-col items-center p-3 bg-white bg-opacity-30 rounded-xl shadow-md min-w-[90px] md:min-w-[120px]">
+            <span className="text-white text-3xl md:text-5xl font-extrabold">{String(value).padStart(2, '0')}</span>
+            <span className="text-sm md:text-lg text-white opacity-90">{label}</span>
+          </div>
+        );
+
+        // Reusable Navigation Link Component
+        const NavLink = ({ title, currentPage, targetPage, onClick }) => (
+          <button
+            className={`px-4 py-2 rounded-full font-semibold transition-all duration-300 ease-in-out
+              ${currentPage === targetPage
+                ? 'bg-purple-600 text-white shadow-md'
+                : 'bg-transparent text-purple-700 hover:bg-purple-100'
+              } focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50`}
+            onClick={onClick}
+          >
+            {title}
+          </button>
+        );
+
+        // Home Page Component
+        function HomePage() {
+          return (
+            <div className="bg-white rounded-3xl shadow-xl p-8 md:p-12 text-center border border-gray-200">
+              <h2 className="text-4xl md:text-6xl font-extrabold text-purple-700 mb-6 leading-tight">
+                Happy Birthday, My Dearest Erva!
+              </h2>
+              <p className="text-lg md:text-xl text-gray-700 leading-relaxed max-w-3xl mx-auto mb-8">
+                Merhaba güzel Ervam,
+Today the whole world celebrates the day you came into it. And I made this little surprise for you—with love from across the miles 💌
+Scroll down to find memories, wishes, and a few surprises waiting just for you.
+              </p>
+              <div className="flex justify-center mt-8">
+                <img
+                  src="Erva1.jpg"
+                  alt="My Cutiee Baby"
+                  className="rounded-3xl shadow-lg max-w-full h-auto"
+                  onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/400x300/a78bfa/ffffff?text=Image+Load+Error"; }}
+                />
+              </div>
+              <p className="text-md md:text-lg text-gray-600 mt-6">
+                Click through the navigation above to explore your special birthday surprises!
+              </p>
+            </div>
+          );
+        }
+
+        // My Message Page Component
+        function MessagePage() {
+          return (
+            <div className="bg-white rounded-3xl shadow-xl p-8 md:p-12 border border-gray-200">
+              <h2 className="text-3xl md:text-5xl font-bold text-pink-600 mb-6 text-center">
+                A Message Just For You
+              </h2>
+              <div className="prose lg:prose-xl mx-auto text-gray-800 leading-relaxed text-lg">
+                <p>My Dearest Erva,</p>
+                <p>
+Today is the most special day—because it gave the world you.
+
+There are a million things I want to say to you, but they all come down to one simple truth: I love you. So deeply, so endlessly, and with every part of my being.
+
+You are the calm in my storm, the light in my dark days, and the most comforting presence I have ever known. Every moment I’ve spent with you, whether in laughter, in silence, or even in our little storms, has been precious to me.
+
+If I could, I would wrap the sky in ribbons, fill the air with music, and send you a soft breeze carrying all my warmth—just so you’d feel me close to you today.
+
+Even though we’re in different places, I’ve never felt more connected to someone. My heart is with you in every second of this day, holding your hand, whispering “Happy Birthday, my love,” and smiling just thinking of you.
+
+I wish I could be there to hold your face, kiss your forehead, and watch your eyes sparkle with birthday candles. But until I can do that in person, I hope this little surprise I made brings a smile to your beautiful soul.
+
+Erva, I don’t just love you—I cherish you. Your laughter, your thoughts, your softness, your stubbornness, your dreams, your sleepy eyes, your silly jokes, your tears, your strength—all of it. All of you.
+
+And today, I hope you don’t just feel loved—I hope you feel celebrated, protected, admired, adored, and treasured. Because that’s exactly what you are.
+
+Take a deep breath and remember:
+No matter how far I am, I’m always beside you, in every way that matters.
+I’m not going anywhere.
+I’m here—loving you. Waiting for you. Believing in you.
+Every day.
+Always.
+
+Happy birthday, my Erva.
+Seninle her şey daha güzel.
+Seni çok ama çok seviyorum.                </p>
+                
+                <p className="text-right mt-6 font-semibold">- Anant</p>
+              </div>
+              
+            </div>
+          );
+        }
+
+        // Gallery Page Component (now accepts openModal prop)
+        function GalleryPage({ openModal }) {
+          // Replace these with actual image URLs of your girlfriend!
+          const photos = [
+    
+            { id: 5, src: "Erva6.jpg", alt: "Happy Baby" },
+            { id: 6, src: "Erva7.jpg", alt: "Sassy Baby" },
+            { id: 7, src: "Erva8.jpg", alt: "Sleepy baby" },
+            { id: 8, src: "Erva9.jpg", alt: "Sexy Baby" },
+            { id: 9, src: "Erva10.jpg", alt: "Blue Baby" },
+            { id: 10, src: "Erva11.jpg", alt: "Cute Baby" },
+            { id: 11, src: "Erva12.jpg", alt: "Adorable Baby" },
+            { id: 12, src: "Erva13.jpg", alt: "Grumpy Baby" },
+          ];
+
+          return (
+            <div className="bg-white rounded-3xl shadow-xl p-8 md:p-12 border border-gray-200">
+              <h2 className="text-3xl md:text-5xl font-bold text-blue-600 mb-8 text-center">
+                Our Beautiful Moments
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {photos.map((photo) => (
+                  <div
+                    key={photo.id}
+                    className="relative group rounded-2xl overflow-hidden shadow-lg transition-transform transform hover:scale-105 cursor-pointer"
+                    onClick={() => openModal(photo.src, photo.alt)} // Add onClick event
+                  >
+                    <img
+                      src={photo.src}
+                      alt={photo.alt}
+                      className="w-full h-64 object-cover"
+                      onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/600x400/ccc/333?text=Image+Load+Error"; }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-70 transition-opacity flex items-end p-4">
+                      <p className="text-white text-lg font-semibold">{photo.alt}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <p className="mt-8 text-center text-gray-600">
+                (Remember to replace the placeholder images with your actual photos together!)
+              </p>
+            </div>
+          );
+        }
+
+        // Wishes Page Component
+        function WishesPage() {
+          // Placeholder for friend's wishes. You would manually add these.
+          const friendsWishes = [
+            { name: "Hassan", wish: "1941 e ilk geldiğin zaman ve şuan arasında dağlar kadar fark var o zamanlar seninle çok kavga ederdik 😈 şimdi ise iyi anlaştıgımızı düşünüyorum yeni yaşın kutlu olsun bir sonraki yaş gününde görüşmek üzere 😈😈😈" },
+            { name: "Mike", wish: "Wishing you the happiest of birthdays, Erva! May all your dreams come true this year." },
+            { name: "Jessica", wish: "To my wonderful friend, Happy Birthday! So glad to have you in my life. Let's celebrate soon!" },
+            { name: "David", wish: "Happy Birthday! Hope you get spoiled rotten today. You deserve it!" },
+          ];
+
+          return (
+            <div className="bg-white rounded-3xl shadow-xl p-8 md:p-12 border border-gray-200">
+              <h2 className="text-3xl md:text-5xl font-bold text-green-600 mb-8 text-center">
+                Wishes From Your Amazing Friends!
+              </h2>
+
+              {/* Section for displaying wishes */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                {friendsWishes.map((wish, index) => (
+                  <div key={index} className="bg-purple-50 p-6 rounded-2xl shadow-md border border-purple-100">
+                    <p className="text-gray-800 text-lg italic mb-3">"{wish.wish}"</p>
+                    <p className="text-right font-semibold text-purple-700">- {wish.name}</p>
+                  </div>
+                ))}
+              </div>
+
+            </div>
+          );
+        }
+
+        // Render the App component into the #root div
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
